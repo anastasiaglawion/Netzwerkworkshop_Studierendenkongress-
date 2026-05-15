@@ -6,179 +6,194 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <style>
   :root {
-    --ink: #1a1410;
-    --paper: #f4ede0;
-    --paper-warm: #ebe0cb;
-    --accent: #7a1f1f;
-    --accent-2: #2e4a2b;
-    --muted: #8a7d6a;
-    --rule: #c9b896;
+    --navy: #04316A;
+    --navy-dark: #002145;
+    --orange: #FDB636;
+    --ink: #1a1a1a;
+    --paper: #ffffff;
+    --bg-soft: #f7f7f7;
+    --muted: #6b7280;
+    --rule: #e5e7eb;
   }
   * { box-sizing: border-box; }
   html, body {
     margin: 0; padding: 0;
     background: var(--paper);
     color: var(--ink);
-    font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
-    font-size: 16px;
+    font-family: "Open Sans", "Segoe UI", Tahoma, "Helvetica Neue", Arial, sans-serif;
+    font-size: 15px;
     line-height: 1.5;
     height: 100vh;
     overflow: hidden;
   }
-  header {
-    border-bottom: 2px double var(--rule);
-    padding: 24px 40px 18px 40px;
-    background: linear-gradient(180deg, var(--paper-warm) 0%, var(--paper) 100%);
-  }
-  header .kicker {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    font-size: 10.5px;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-  header h1 {
-    margin: 0;
-    font-size: 26px;
-    font-weight: 400;
-    font-style: italic;
-    letter-spacing: -0.01em;
-    line-height: 1.25;
-  }
+  /* Tab nav on top */
   nav.tabs {
     padding: 0 40px;
-    background: var(--ink);
-    color: var(--paper);
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    background: var(--navy-dark);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 12px;
+    letter-spacing: 0.04em;
     display: flex;
   }
   nav.tabs button {
     background: transparent;
     border: none;
-    color: var(--paper);
-    opacity: 0.55;
-    padding: 12px 0;
-    margin-right: 28px;
+    color: #ffffff;
+    opacity: 0.65;
+    padding: 14px 0;
+    margin-right: 32px;
     cursor: pointer;
     font: inherit;
     letter-spacing: inherit;
-    text-transform: inherit;
-    border-bottom: 2px solid transparent;
+    border-bottom: 3px solid transparent;
     transition: opacity 0.15s, border-color 0.15s;
+    font-weight: 600;
   }
-  nav.tabs button.active { opacity: 1; border-bottom-color: var(--accent); }
-  nav.tabs button:hover { opacity: 0.85; }
+  nav.tabs button.active { opacity: 1; border-bottom-color: var(--orange); }
+  nav.tabs button:hover { opacity: 0.95; }
+  /* Header bar — FAU style: bold title, orange underline */
+  header {
+    padding: 22px 40px 0 40px;
+    background: var(--paper);
+    border-bottom: 3px solid var(--orange);
+  }
+  header h1 {
+    margin: 0 0 14px 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
   main {
     display: grid;
-    grid-template-columns: 1fr 420px;
+    grid-template-columns: 1fr 440px;
     gap: 0;
-    height: calc(100vh - 130px);
+    height: calc(100vh - 49px - 80px);
   }
   #viz {
     position: relative;
     border-right: 1px solid var(--rule);
-    background:
-      radial-gradient(ellipse at 30% 20%, rgba(122,31,31,0.04) 0%, transparent 50%),
-      radial-gradient(ellipse at 70% 80%, rgba(46,74,43,0.04) 0%, transparent 50%),
-      var(--paper);
+    background: var(--paper);
     overflow: hidden;
   }
   #viz svg { display: block; width: 100%; height: 100%; }
+  /* Bottom orange accent line — like FAU slides */
+  body::after {
+    content: '';
+    display: block;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    height: 3px;
+    background: var(--orange);
+    z-index: 50;
+  }
   .controls {
     position: absolute;
-    top: 14px; left: 14px;
-    background: rgba(244,237,224,0.92);
+    top: 16px; left: 16px;
+    background: rgba(255,255,255,0.96);
     border: 1px solid var(--rule);
+    border-radius: 4px;
     padding: 12px 14px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: inherit;
     font-size: 11px;
-    letter-spacing: 0.04em;
-    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     z-index: 10;
   }
   .controls .label {
     text-transform: uppercase;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.1em;
     color: var(--muted);
-    font-size: 9.5px;
+    font-size: 10px;
+    font-weight: 600;
     margin-bottom: 6px;
   }
   .controls button {
-    background: transparent;
+    background: var(--paper);
     border: 1px solid var(--rule);
-    color: var(--ink);
-    padding: 5px 10px;
+    color: var(--navy);
+    padding: 6px 11px;
     margin-right: 4px;
     cursor: pointer;
     font-family: inherit;
-    font-size: 10.5px;
-    letter-spacing: 0.04em;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 3px;
     transition: all 0.15s;
   }
-  .controls button:hover { background: var(--ink); color: var(--paper); }
+  .controls button:hover { background: var(--bg-soft); border-color: var(--navy); }
   .controls button.active {
-    background: var(--accent);
-    color: var(--paper);
-    border-color: var(--accent);
+    background: var(--navy);
+    color: #ffffff;
+    border-color: var(--navy);
   }
   aside {
-    padding: 24px 28px;
+    padding: 26px 32px 32px 32px;
     overflow-y: auto;
-    background: var(--paper-warm);
+    background: var(--bg-soft);
+    border-left: 1px solid var(--rule);
   }
   .stat-card {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1px;
-    background: var(--rule);
-    margin-bottom: 24px;
-    border: 1px solid var(--rule);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
   }
   .stat-card .cell {
-    background: var(--paper-warm);
-    padding: 10px 12px;
+    background: var(--paper);
+    padding: 14px 16px;
+    border-left: 3px solid var(--orange);
   }
   .stat-card .label {
-    font-size: 9px;
-    letter-spacing: 0.14em;
+    font-size: 10px;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--muted);
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    margin-bottom: 3px;
+    font-family: inherit;
+    font-weight: 600;
+    margin-bottom: 4px;
   }
   .stat-card .value {
-    font-size: 18px;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
     font-variant-numeric: tabular-nums;
   }
   aside h2 {
     margin: 0 0 14px 0;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent);
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    font-family: inherit;
     padding-bottom: 8px;
+    border-bottom: 2px solid var(--orange);
+    display: inline-block;
+  }
+  /* Wrap h2 in a full-width block visually */
+  aside .section-head {
     border-bottom: 1px solid var(--rule);
+    margin-bottom: 14px;
+    margin-top: 28px;
+  }
+  aside .section-head:first-of-type { margin-top: 0; }
+  aside .section-head h2 {
+    margin-bottom: -1px;
+    padding-bottom: 8px;
   }
   .explainer {
     font-size: 13px;
-    line-height: 1.5;
+    line-height: 1.55;
     margin-bottom: 22px;
+    color: var(--ink);
   }
   .explainer dt {
-    font-weight: 600;
-    color: var(--accent);
-    margin-top: 10px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-top: 12px;
     margin-bottom: 3px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-family: inherit;
+    font-size: 12.5px;
   }
   .explainer dt:first-child { margin-top: 0; }
   .explainer dd { margin: 0; padding-left: 0; }
@@ -186,50 +201,58 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
+    background: var(--paper);
   }
   table.metrics th {
     text-align: left;
-    font-weight: 600;
-    font-size: 10.5px;
-    letter-spacing: 0.08em;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--muted);
-    padding: 8px 6px 8px 0;
-    border-bottom: 1px solid var(--rule);
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--navy);
+    padding: 10px 8px 10px 12px;
+    border-bottom: 2px solid var(--navy);
+    background: var(--paper);
+    font-family: inherit;
     cursor: pointer;
     user-select: none;
     white-space: nowrap;
   }
-  table.metrics th.num { text-align: right; }
-  table.metrics th:hover { color: var(--accent); }
+  table.metrics th.num { text-align: right; padding-right: 12px; padding-left: 8px; }
+  table.metrics th:hover { color: var(--orange); }
   table.metrics th .sort-arrow {
     display: inline-block;
     width: 10px;
-    color: var(--accent);
+    color: var(--orange);
     margin-left: 2px;
   }
   table.metrics td {
-    padding: 6px 6px 6px 0;
-    border-bottom: 1px dotted #d6c8aa;
+    padding: 7px 8px 7px 12px;
+    border-bottom: 1px solid var(--rule);
   }
   table.metrics td.num {
     text-align: right;
     font-variant-numeric: tabular-nums;
-    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    padding-right: 12px;
+    padding-left: 8px;
   }
-  table.metrics tr:hover { background: rgba(122,31,31,0.06); cursor: pointer; }
-  table.metrics tr.highlighted { background: rgba(122,31,31,0.14); }
+  table.metrics tr:hover { background: #fff9ec; cursor: pointer; }
+  table.metrics tr.highlighted { background: #fff3d4; }
+  table.metrics.top-edges th { cursor: default; }
+  table.metrics.top-edges th:hover { color: var(--navy); }
+  table.metrics.top-edges tr:hover { background: var(--paper); cursor: default; }
   .node-tooltip {
     position: absolute;
     pointer-events: none;
-    background: var(--ink);
-    color: var(--paper);
-    padding: 8px 12px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 11.5px;
-    line-height: 1.4;
-    letter-spacing: 0.02em;
+    background: var(--navy-dark);
+    color: #ffffff;
+    padding: 10px 14px;
+    font-family: inherit;
+    font-size: 12px;
+    line-height: 1.45;
+    border-radius: 3px;
+    border-left: 3px solid var(--orange);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     opacity: 0;
     transition: opacity 0.12s;
     z-index: 100;
@@ -237,35 +260,37 @@
   .node-tooltip strong {
     display: block;
     font-size: 13px;
-    margin-bottom: 4px;
-    font-style: italic;
-    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--orange);
   }
-  .node-tooltip .row { display: flex; justify-content: space-between; gap: 16px; }
-  .node-tooltip .row span:first-child { color: #d4c5a5; }
-  .link { stroke: #5a4a35; stroke-opacity: 0.4; }
+  .node-tooltip .row { display: flex; justify-content: space-between; gap: 18px; }
+  .node-tooltip .row span:first-child { color: #b8c5d8; }
+  .link { stroke: #b8b8b8; stroke-opacity: 0.55; }
   .link-hit { stroke: transparent; cursor: pointer; }
-  .link.link-hover { stroke: #7a1f1f; stroke-opacity: 0.9; }
-  .node circle { stroke: #1a1410; stroke-width: 1.2px; cursor: pointer; }
+  .link.link-hover { stroke: var(--orange); stroke-opacity: 1; }
+  .node circle { stroke: var(--navy-dark); stroke-width: 1.5px; cursor: pointer; }
   .node text {
     pointer-events: none;
-    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-    font-size: 11px;
+    font-family: inherit;
+    font-size: 11.5px;
+    font-weight: 600;
     fill: var(--ink);
     paint-order: stroke;
     stroke: var(--paper);
-    stroke-width: 3.5px;
+    stroke-width: 4px;
     stroke-linejoin: round;
   }
-  .node.dim circle { opacity: 0.18; }
-  .node.dim text { opacity: 0.18; }
+  .node.dim circle { opacity: 0.15; }
+  .node.dim text { opacity: 0.15; }
   .link.dim { stroke-opacity: 0.06; }
   @media (max-width: 900px) {
     html, body { height: auto; overflow: auto; }
     main { grid-template-columns: 1fr; height: auto; }
     #viz { height: 60vh; border-right: none; border-bottom: 1px solid var(--rule); }
-    aside { overflow-y: visible; }
+    aside { overflow-y: visible; border-left: none; }
     .stat-card { grid-template-columns: repeat(2, 1fr); }
+    body::after { display: none; }
   }
 </style>
 </head>
@@ -276,7 +301,6 @@
   <button data-community="2">Community 3</button>
 </nav>
 <header>
-  <div class="kicker">Figurennetzwerk · Fanfiction-Community · Nr. <span id="num-display">1</span></div>
   <h1 id="title-display">Gemeinsam auftretende Figuren in Texten von Community 1</h1>
 </header>
 
@@ -300,8 +324,6 @@
     <div class="stat-card">
       <div class="cell"><div class="label">Knoten</div><div class="value" id="stat-nodes">—</div></div>
       <div class="cell"><div class="label">Kanten</div><div class="value" id="stat-edges">—</div></div>
-      <div class="cell"><div class="label">Dichte</div><div class="value" id="stat-density">—</div></div>
-      <div class="cell"><div class="label">Modularity</div><div class="value" id="stat-modularity">—</div></div>
     </div>
 
     <h2>Zentralitätsmaße</h2>
@@ -314,6 +336,8 @@
       <dd>Misst die Bedeutung eines Knotens anhand der Bedeutung der Knoten, mit denen er verbunden ist. Knoten mit hoher Eigenvector-Zentralität sind oft mit anderen wichtigen Knoten im Netzwerk verbunden.</dd>
     </dl>
 
+    <h2 style="margin-top: 28px">Figuren</h2>
+
     <table class="metrics">
       <thead>
         <tr>
@@ -325,6 +349,18 @@
       </thead>
       <tbody id="tbody"></tbody>
     </table>
+
+    <h2 style="margin-top: 28px">10 stärksten Verbindungen</h2>
+    <table class="metrics top-edges">
+      <thead>
+        <tr>
+          <th>Figur A</th>
+          <th>Figur B</th>
+          <th class="num">Wert</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-edges"></tbody>
+    </table>
   </aside>
 </main>
 
@@ -332,7 +368,7 @@
 const COMMUNITIES = [{"id": "c1", "num": "1", "title": "Gemeinsam auftretende Figuren in Texten von Community 1", "nodes": [{"id": "Albus Dumbledore", "label": "Albus Dumbledore", "eigenvector": 0.10436287805051983, "betweenness": 0.0014280913978494624, "degree": 4, "weighted_degree": 215}, {"id": "Draco Malfoy", "label": "Draco Malfoy", "eigenvector": 0.48472011128314774, "betweenness": 0.15900668551878228, "degree": 9, "weighted_degree": 1244}, {"id": "Harry Potter", "label": "Harry Potter", "eigenvector": 0.6399061111350562, "betweenness": 0.1850740393909274, "degree": 10, "weighted_degree": 2007}, {"id": "Lucius Malfoy", "label": "Lucius Malfoy", "eigenvector": 0.13262740261971273, "betweenness": 0.11131345989031001, "degree": 8, "weighted_degree": 349}, {"id": "Bellatrix Lestrange", "label": "Bellatrix Lestrange", "eigenvector": 0.0003218453846097845, "betweenness": 0.0625, "degree": 2, "weighted_degree": 8}, {"id": "Blaise Zabini", "label": "Blaise Zabini", "eigenvector": 0.038183993963140844, "betweenness": 0.11471337801982964, "degree": 9, "weighted_degree": 148}, {"id": "Charlie Weasley", "label": "Charlie Weasley", "eigenvector": 0.013197859439486056, "betweenness": 0.0, "degree": 3, "weighted_degree": 27}, {"id": "Daphne Greengrass", "label": "Daphne Greengrass", "eigenvector": 0.0002234650109154519, "betweenness": 0.0625, "degree": 3, "weighted_degree": 11}, {"id": "Dudley Dursley", "label": "Dudley Dursley", "eigenvector": 0.011703433448818855, "betweenness": 0.13996455987086914, "degree": 7, "weighted_degree": 43}, {"id": "Fenrir Greyback", "label": "Fenrir Greyback", "eigenvector": 0.015019256420887082, "betweenness": 0.019700533561420656, "degree": 5, "weighted_degree": 48}, {"id": "Fred Weasley", "label": "Fred Weasley", "eigenvector": 0.00011680321695657715, "betweenness": 0.0024193548387096775, "degree": 2, "weighted_degree": 28}, {"id": "George Weasley", "label": "George Weasley", "eigenvector": 0.004572236870734867, "betweenness": 0.03897849462365591, "degree": 3, "weighted_degree": 39}, {"id": "Ginny Weasley", "label": "Ginny Weasley", "eigenvector": 0.006537777262543088, "betweenness": 0.11108798235814366, "degree": 6, "weighted_degree": 64}, {"id": "Godric Gryffindor", "label": "Godric Gryffindor", "eigenvector": 4.7923896113893927e-05, "betweenness": 0.0625, "degree": 2, "weighted_degree": 43}, {"id": "Hermione Granger", "label": "Hermione Granger", "eigenvector": 0.28152535915822935, "betweenness": 0.04427737920681468, "degree": 7, "weighted_degree": 717}, {"id": "James Potter", "label": "James Potter", "eigenvector": 2.96726612576395e-05, "betweenness": 0.009143549893075508, "degree": 4, "weighted_degree": 100}, {"id": "Lily Potter", "label": "Lily Potter", "eigenvector": 0.00010599439885958498, "betweenness": 0.06001715874521852, "degree": 7, "weighted_degree": 115}, {"id": "Lord Voldemort", "label": "Lord Voldemort", "eigenvector": 0.0041000672869326476, "betweenness": 0.14079178714496549, "degree": 7, "weighted_degree": 95}, {"id": "Luna Lovegood", "label": "Luna Lovegood", "eigenvector": 0.005232288148027567, "betweenness": 0.022412634408602146, "degree": 6, "weighted_degree": 43}, {"id": "Narcissa Malfoy", "label": "Narcissa Malfoy", "eigenvector": 0.05970249609604842, "betweenness": 0.27985694827784485, "degree": 8, "weighted_degree": 169}, {"id": "Neville Longbottom", "label": "Neville Longbottom", "eigenvector": 0.00659677154062491, "betweenness": 0.0005040322580645161, "degree": 5, "weighted_degree": 50}, {"id": "Nymphadora Tonks", "label": "Nymphadora Tonks", "eigenvector": 4.015518884273016e-07, "betweenness": 0.0, "degree": 1, "weighted_degree": 2}, {"id": "Petunia Dursley", "label": "Petunia Dursley", "eigenvector": 0.00011566663974630475, "betweenness": 0.0, "degree": 1, "weighted_degree": 11}, {"id": "Regulus Black", "label": "Regulus Black", "eigenvector": 0.004049225477401618, "betweenness": 0.16318457429403818, "degree": 7, "weighted_degree": 35}, {"id": "Remus Lupin", "label": "Remus Lupin", "eigenvector": 1.0661587684979984e-05, "betweenness": 0.0, "degree": 3, "weighted_degree": 108}, {"id": "Ron Weasley", "label": "Ron Weasley", "eigenvector": 0.19818720066829162, "betweenness": 0.05362837767071637, "degree": 8, "weighted_degree": 541}, {"id": "Salazar Slytherin", "label": "Salazar Slytherin", "eigenvector": 1.2917412153016265e-06, "betweenness": 0.0, "degree": 1, "weighted_degree": 30}, {"id": "Severus Snape", "label": "Severus Snape", "eigenvector": 0.4502723691390054, "betweenness": 0.08288304569139485, "degree": 9, "weighted_degree": 1034}, {"id": "Sirius Black", "label": "Sirius Black", "eigenvector": 0.00014116232488314975, "betweenness": 0.06001715874521852, "degree": 7, "weighted_degree": 163}, {"id": "Theodore Nott", "label": "Theodore Nott", "eigenvector": 0.008821830724391936, "betweenness": 0.0, "degree": 4, "weighted_degree": 31}, {"id": "Rabastan Lestrange", "label": "Rabastan Lestrange", "eigenvector": 5.783349323504251e-07, "betweenness": 0.0, "degree": 1, "weighted_degree": 2}, {"id": "Pansy Parkinson", "label": "Pansy Parkinson", "eigenvector": 0.0003430705957221624, "betweenness": 0.0, "degree": 1, "weighted_degree": 10}, {"id": "Peter Pettigrew", "label": "Peter Pettigrew", "eigenvector": 2.7911348921865452e-06, "betweenness": 0.0, "degree": 2, "weighted_degree": 24}], "edges": [{"source": "Albus Dumbledore", "target": "Harry Potter", "weight": 125}, {"source": "Albus Dumbledore", "target": "Severus Snape", "weight": 80}, {"source": "Albus Dumbledore", "target": "Charlie Weasley", "weight": 2}, {"source": "Albus Dumbledore", "target": "Fenrir Greyback", "weight": 8}, {"source": "Draco Malfoy", "target": "Blaise Zabini", "weight": 60}, {"source": "Draco Malfoy", "target": "Harry Potter", "weight": 585}, {"source": "Draco Malfoy", "target": "Hermione Granger", "weight": 179}, {"source": "Draco Malfoy", "target": "Lucius Malfoy", "weight": 77}, {"source": "Draco Malfoy", "target": "Narcissa Malfoy", "weight": 32}, {"source": "Draco Malfoy", "target": "Ron Weasley", "weight": 117}, {"source": "Draco Malfoy", "target": "Severus Snape", "weight": 171}, {"source": "Draco Malfoy", "target": "George Weasley", "weight": 10}, {"source": "Draco Malfoy", "target": "Theodore Nott", "weight": 13}, {"source": "Harry Potter", "target": "Charlie Weasley", "weight": 17}, {"source": "Harry Potter", "target": "Dudley Dursley", "weight": 15}, {"source": "Harry Potter", "target": "Fenrir Greyback", "weight": 19}, {"source": "Harry Potter", "target": "Hermione Granger", "weight": 301}, {"source": "Harry Potter", "target": "Lucius Malfoy", "weight": 104}, {"source": "Harry Potter", "target": "Ron Weasley", "weight": 182}, {"source": "Harry Potter", "target": "Severus Snape", "weight": 617}, {"source": "Harry Potter", "target": "Narcissa Malfoy", "weight": 42}, {"source": "Lucius Malfoy", "target": "Dudley Dursley", "weight": 2}, {"source": "Lucius Malfoy", "target": "Fenrir Greyback", "weight": 4}, {"source": "Lucius Malfoy", "target": "Lord Voldemort", "weight": 33}, {"source": "Lucius Malfoy", "target": "Narcissa Malfoy", "weight": 35}, {"source": "Lucius Malfoy", "target": "Severus Snape", "weight": 92}, {"source": "Lucius Malfoy", "target": "Regulus Black", "weight": 2}, {"source": "Bellatrix Lestrange", "target": "Narcissa Malfoy", "weight": 6}, {"source": "Bellatrix Lestrange", "target": "Rabastan Lestrange", "weight": 2}, {"source": "Blaise Zabini", "target": "Daphne Greengrass", "weight": 6}, {"source": "Blaise Zabini", "target": "Ginny Weasley", "weight": 5}, {"source": "Blaise Zabini", "target": "Hermione Granger", "weight": 31}, {"source": "Blaise Zabini", "target": "Neville Longbottom", "weight": 5}, {"source": "Blaise Zabini", "target": "Pansy Parkinson", "weight": 10}, {"source": "Blaise Zabini", "target": "Ron Weasley", "weight": 23}, {"source": "Blaise Zabini", "target": "Theodore Nott", "weight": 5}, {"source": "Blaise Zabini", "target": "Luna Lovegood", "weight": 3}, {"source": "Charlie Weasley", "target": "Severus Snape", "weight": 8}, {"source": "Daphne Greengrass", "target": "Ginny Weasley", "weight": 3}, {"source": "Daphne Greengrass", "target": "Nymphadora Tonks", "weight": 2}, {"source": "Dudley Dursley", "target": "Lily Potter", "weight": 2}, {"source": "Dudley Dursley", "target": "Lord Voldemort", "weight": 2}, {"source": "Dudley Dursley", "target": "Petunia Dursley", "weight": 11}, {"source": "Dudley Dursley", "target": "Severus Snape", "weight": 7}, {"source": "Dudley Dursley", "target": "Sirius Black", "weight": 4}, {"source": "Fenrir Greyback", "target": "Lord Voldemort", "weight": 10}, {"source": "Fenrir Greyback", "target": "Severus Snape", "weight": 7}, {"source": "Fred Weasley", "target": "George Weasley", "weight": 25}, {"source": "Fred Weasley", "target": "Luna Lovegood", "weight": 3}, {"source": "George Weasley", "target": "Narcissa Malfoy", "weight": 4}, {"source": "Ginny Weasley", "target": "Luna Lovegood", "weight": 8}, {"source": "Ginny Weasley", "target": "Neville Longbottom", "weight": 10}, {"source": "Ginny Weasley", "target": "Ron Weasley", "weight": 34}, {"source": "Ginny Weasley", "target": "Narcissa Malfoy", "weight": 4}, {"source": "Godric Gryffindor", "target": "Lord Voldemort", "weight": 13}, {"source": "Godric Gryffindor", "target": "Salazar Slytherin", "weight": 30}, {"source": "Hermione Granger", "target": "Ron Weasley", "weight": 164}, {"source": "Hermione Granger", "target": "Luna Lovegood", "weight": 15}, {"source": "Hermione Granger", "target": "Neville Longbottom", "weight": 18}, {"source": "Hermione Granger", "target": "Theodore Nott", "weight": 9}, {"source": "James Potter", "target": "Lily Potter", "weight": 40}, {"source": "James Potter", "target": "Regulus Black", "weight": 6}, {"source": "James Potter", "target": "Remus Lupin", "weight": 24}, {"source": "James Potter", "target": "Sirius Black", "weight": 30}, {"source": "Lily Potter", "target": "Lord Voldemort", "weight": 16}, {"source": "Lily Potter", "target": "Peter Pettigrew", "weight": 8}, {"source": "Lily Potter", "target": "Regulus Black", "weight": 6}, {"source": "Lily Potter", "target": "Remus Lupin", "weight": 20}, {"source": "Lily Potter", "target": "Sirius Black", "weight": 23}, {"source": "Lord Voldemort", "target": "Sirius Black", "weight": 19}, {"source": "Lord Voldemort", "target": "Regulus Black", "weight": 2}, {"source": "Luna Lovegood", "target": "Neville Longbottom", "weight": 7}, {"source": "Luna Lovegood", "target": "Ron Weasley", "weight": 7}, {"source": "Narcissa Malfoy", "target": "Severus Snape", "weight": 43}, {"source": "Narcissa Malfoy", "target": "Regulus Black", "weight": 3}, {"source": "Neville Longbottom", "target": "Ron Weasley", "weight": 10}, {"source": "Regulus Black", "target": "Severus Snape", "weight": 9}, {"source": "Regulus Black", "target": "Sirius Black", "weight": 7}, {"source": "Remus Lupin", "target": "Sirius Black", "weight": 64}, {"source": "Ron Weasley", "target": "Theodore Nott", "weight": 4}, {"source": "Sirius Black", "target": "Peter Pettigrew", "weight": 16}], "stats": {"n_nodes": 33, "n_edges": 81, "density": 0.1534090909090909, "avg_clustering": 0.44540644540644536, "modularity": 0.2350566872537674, "n_communities": 5}}, {"id": "c2", "num": "2", "title": "Gemeinsam auftretende Figuren in Texten von Community 2", "nodes": [{"id": "Albus Dumbledore", "label": "Albus Dumbledore", "eigenvector": 0.043260288730747755, "betweenness": 0.00661459980411602, "degree": 8, "weighted_degree": 114}, {"id": "Draco Malfoy", "label": "Draco Malfoy", "eigenvector": 0.4886266411727566, "betweenness": 0.04445169346859408, "degree": 13, "weighted_degree": 1098}, {"id": "Ginny Weasley", "label": "Ginny Weasley", "eigenvector": 0.0849577059800452, "betweenness": 0.11532204181125455, "degree": 12, "weighted_degree": 266}, {"id": "Harry Potter", "label": "Harry Potter", "eigenvector": 0.30710993070550463, "betweenness": 0.04445169346859408, "degree": 13, "weighted_degree": 763}, {"id": "Hermione Granger", "label": "Hermione Granger", "eigenvector": 0.6288059586843596, "betweenness": 0.03238174725410191, "degree": 13, "weighted_degree": 1628}, {"id": "Lucius Malfoy", "label": "Lucius Malfoy", "eigenvector": 0.09554631199956036, "betweenness": 0.05416888687762767, "degree": 11, "weighted_degree": 218}, {"id": "Minerva McGonagall", "label": "Minerva McGonagall", "eigenvector": 0.04453699924154152, "betweenness": 0.006651994130985728, "degree": 8, "weighted_degree": 120}, {"id": "Severus Snape", "label": "Severus Snape", "eigenvector": 0.43349497394276504, "betweenness": 0.2085843738755166, "degree": 18, "weighted_degree": 961}, {"id": "Antonin Dolohov", "label": "Antonin Dolohov", "eigenvector": 0.0007757139459174553, "betweenness": 0.028648703413903614, "degree": 5, "weighted_degree": 29}, {"id": "Lord Voldemort", "label": "Lord Voldemort", "eigenvector": 0.03516956202532231, "betweenness": 0.05186918567616626, "degree": 12, "weighted_degree": 106}, {"id": "Blaise Zabini", "label": "Blaise Zabini", "eigenvector": 0.11347966309686322, "betweenness": 0.06527599211094848, "degree": 14, "weighted_degree": 287}, {"id": "Theodore Nott", "label": "Theodore Nott", "eigenvector": 0.0013501422133476155, "betweenness": 0.0, "degree": 5, "weighted_degree": 17}, {"id": "Bellatrix Lestrange", "label": "Bellatrix Lestrange", "eigenvector": 0.006426381146242721, "betweenness": 0.0, "degree": 5, "weighted_degree": 30}, {"id": "Bill Weasley", "label": "Bill Weasley", "eigenvector": 0.0023071622985335904, "betweenness": 0.1751204421039985, "degree": 10, "weighted_degree": 26}, {"id": "Fred Weasley", "label": "Fred Weasley", "eigenvector": 0.009655341509619523, "betweenness": 0.03007118712012434, "degree": 7, "weighted_degree": 54}, {"id": "Lily Potter", "label": "Lily Potter", "eigenvector": 0.005972353881319986, "betweenness": 0.0018692092221503987, "degree": 4, "weighted_degree": 17}, {"id": "Narcissa Malfoy", "label": "Narcissa Malfoy", "eigenvector": 0.0488868467883507, "betweenness": 0.047467322705747855, "degree": 13, "weighted_degree": 136}, {"id": "Remus Lupin", "label": "Remus Lupin", "eigenvector": 0.025044632949808045, "betweenness": 0.010968387354941978, "degree": 7, "weighted_degree": 82}, {"id": "Ron Weasley", "label": "Ron Weasley", "eigenvector": 0.20644300041325125, "betweenness": 0.06732279629813823, "degree": 13, "weighted_degree": 468}, {"id": "Sirius Black", "label": "Sirius Black", "eigenvector": 0.032389192182073444, "betweenness": 0.007452370022702501, "degree": 9, "weighted_degree": 90}, {"id": "Rodolphus Lestrange", "label": "Rodolphus Lestrange", "eigenvector": 0.0004176692870747842, "betweenness": 0.03100073211788486, "degree": 5, "weighted_degree": 14}, {"id": "George Weasley", "label": "George Weasley", "eigenvector": 0.0010997512286962015, "betweenness": 0.011447049407998495, "degree": 5, "weighted_degree": 43}, {"id": "Andromeda Tonks", "label": "Andromeda Tonks", "eigenvector": 0.002471907361481129, "betweenness": 0.0004201680672268908, "degree": 3, "weighted_degree": 7}, {"id": "Molly Weasley", "label": "Molly Weasley", "eigenvector": 2.6518339276603566e-05, "betweenness": 0.005546218487394958, "degree": 5, "weighted_degree": 10}, {"id": "Astoria Greengrass", "label": "Astoria Greengrass", "eigenvector": 0.0004977172809898252, "betweenness": 0.0, "degree": 5, "weighted_degree": 9}, {"id": "Charlie Weasley", "label": "Charlie Weasley", "eigenvector": 1.8078453970634832e-05, "betweenness": 0.013766233766233768, "degree": 3, "weighted_degree": 10}, {"id": "Kingsley Shacklebolt", "label": "Kingsley Shacklebolt", "eigenvector": 0.001068270499420403, "betweenness": 0.0, "degree": 3, "weighted_degree": 4}, {"id": "Lavender Brown", "label": "Lavender Brown", "eigenvector": 4.848953987181277e-05, "betweenness": 0.0, "degree": 1, "weighted_degree": 1}, {"id": "Luna Lovegood", "label": "Luna Lovegood", "eigenvector": 0.022830405932340387, "betweenness": 0.07475219436314441, "degree": 11, "weighted_degree": 76}, {"id": "Neville Longbottom", "label": "Neville Longbottom", "eigenvector": 0.0015257782666180098, "betweenness": 0.03192121117221592, "degree": 5, "weighted_degree": 18}, {"id": "Pansy Parkinson", "label": "Pansy Parkinson", "eigenvector": 0.04359384910354257, "betweenness": 0.10150092244578877, "degree": 13, "weighted_degree": 115}, {"id": "Rabastan Lestrange", "label": "Rabastan Lestrange", "eigenvector": 1.1415731407611917e-05, "betweenness": 0.0, "degree": 2, "weighted_degree": 16}, {"id": "Arthur Weasley", "label": "Arthur Weasley", "eigenvector": 5.25050963648416e-06, "betweenness": 0.0, "degree": 2, "weighted_degree": 6}, {"id": "Scorpius Malfoy", "label": "Scorpius Malfoy", "eigenvector": 0.0007033145127851698, "betweenness": 0.009944240091154691, "degree": 5, "weighted_degree": 7}, {"id": "Percy Weasley", "label": "Percy Weasley", "eigenvector": 2.5957584077134412e-06, "betweenness": 0.0, "degree": 2, "weighted_degree": 2}, {"id": "Cho Chang", "label": "Cho Chang", "eigenvector": 2.7091440401038986e-05, "betweenness": 0.0, "degree": 2, "weighted_degree": 2}], "edges": [{"source": "Albus Dumbledore", "target": "Narcissa Malfoy", "weight": 1}, {"source": "Albus Dumbledore", "target": "Lily Potter", "weight": 3}, {"source": "Albus Dumbledore", "target": "Draco Malfoy", "weight": 9}, {"source": "Albus Dumbledore", "target": "Lord Voldemort", "weight": 10}, {"source": "Albus Dumbledore", "target": "Minerva McGonagall", "weight": 17}, {"source": "Albus Dumbledore", "target": "Harry Potter", "weight": 18}, {"source": "Albus Dumbledore", "target": "Hermione Granger", "weight": 18}, {"source": "Albus Dumbledore", "target": "Severus Snape", "weight": 38}, {"source": "Draco Malfoy", "target": "Sirius Black", "weight": 4}, {"source": "Draco Malfoy", "target": "Remus Lupin", "weight": 7}, {"source": "Draco Malfoy", "target": "Fred Weasley", "weight": 11}, {"source": "Draco Malfoy", "target": "Minerva McGonagall", "weight": 24}, {"source": "Draco Malfoy", "target": "Narcissa Malfoy", "weight": 29}, {"source": "Draco Malfoy", "target": "Pansy Parkinson", "weight": 29}, {"source": "Draco Malfoy", "target": "Blaise Zabini", "weight": 73}, {"source": "Draco Malfoy", "target": "Ginny Weasley", "weight": 83}, {"source": "Draco Malfoy", "target": "Severus Snape", "weight": 83}, {"source": "Draco Malfoy", "target": "Ron Weasley", "weight": 84}, {"source": "Draco Malfoy", "target": "Harry Potter", "weight": 156}, {"source": "Draco Malfoy", "target": "Hermione Granger", "weight": 506}, {"source": "Ginny Weasley", "target": "Astoria Greengrass", "weight": 1}, {"source": "Ginny Weasley", "target": "Sirius Black", "weight": 1}, {"source": "Ginny Weasley", "target": "Theodore Nott", "weight": 1}, {"source": "Ginny Weasley", "target": "Bill Weasley", "weight": 3}, {"source": "Ginny Weasley", "target": "Pansy Parkinson", "weight": 4}, {"source": "Ginny Weasley", "target": "Fred Weasley", "weight": 6}, {"source": "Ginny Weasley", "target": "George Weasley", "weight": 9}, {"source": "Ginny Weasley", "target": "Luna Lovegood", "weight": 9}, {"source": "Ginny Weasley", "target": "Blaise Zabini", "weight": 32}, {"source": "Ginny Weasley", "target": "Ron Weasley", "weight": 42}, {"source": "Ginny Weasley", "target": "Harry Potter", "weight": 75}, {"source": "Harry Potter", "target": "Fred Weasley", "weight": 9}, {"source": "Harry Potter", "target": "Pansy Parkinson", "weight": 13}, {"source": "Harry Potter", "target": "Sirius Black", "weight": 13}, {"source": "Harry Potter", "target": "Remus Lupin", "weight": 14}, {"source": "Harry Potter", "target": "Narcissa Malfoy", "weight": 14}, {"source": "Harry Potter", "target": "Minerva McGonagall", "weight": 21}, {"source": "Harry Potter", "target": "Blaise Zabini", "weight": 36}, {"source": "Harry Potter", "target": "Severus Snape", "weight": 89}, {"source": "Harry Potter", "target": "Ron Weasley", "weight": 106}, {"source": "Harry Potter", "target": "Hermione Granger", "weight": 199}, {"source": "Hermione Granger", "target": "Bellatrix Lestrange", "weight": 3}, {"source": "Hermione Granger", "target": "Sirius Black", "weight": 21}, {"source": "Hermione Granger", "target": "Narcissa Malfoy", "weight": 25}, {"source": "Hermione Granger", "target": "Pansy Parkinson", "weight": 27}, {"source": "Hermione Granger", "target": "Luna Lovegood", "weight": 28}, {"source": "Hermione Granger", "target": "Lord Voldemort", "weight": 31}, {"source": "Hermione Granger", "target": "Blaise Zabini", "weight": 65}, {"source": "Hermione Granger", "target": "Lucius Malfoy", "weight": 89}, {"source": "Hermione Granger", "target": "Ron Weasley", "weight": 139}, {"source": "Hermione Granger", "target": "Severus Snape", "weight": 477}, {"source": "Lucius Malfoy", "target": "Rodolphus Lestrange", "weight": 1}, {"source": "Lucius Malfoy", "target": "Luna Lovegood", "weight": 3}, {"source": "Lucius Malfoy", "target": "Antonin Dolohov", "weight": 4}, {"source": "Lucius Malfoy", "target": "Pansy Parkinson", "weight": 4}, {"source": "Lucius Malfoy", "target": "Blaise Zabini", "weight": 5}, {"source": "Lucius Malfoy", "target": "Bellatrix Lestrange", "weight": 8}, {"source": "Lucius Malfoy", "target": "Lord Voldemort", "weight": 9}, {"source": "Lucius Malfoy", "target": "Ron Weasley", "weight": 9}, {"source": "Lucius Malfoy", "target": "Narcissa Malfoy", "weight": 27}, {"source": "Lucius Malfoy", "target": "Severus Snape", "weight": 59}, {"source": "Minerva McGonagall", "target": "Kingsley Shacklebolt", "weight": 1}, {"source": "Minerva McGonagall", "target": "Remus Lupin", "weight": 1}, {"source": "Minerva McGonagall", "target": "Scorpius Malfoy", "weight": 2}, {"source": "Minerva McGonagall", "target": "Narcissa Malfoy", "weight": 6}, {"source": "Minerva McGonagall", "target": "Severus Snape", "weight": 48}, {"source": "Severus Snape", "target": "Scorpius Malfoy", "weight": 1}, {"source": "Severus Snape", "target": "Kingsley Shacklebolt", "weight": 2}, {"source": "Severus Snape", "target": "Bill Weasley", "weight": 4}, {"source": "Severus Snape", "target": "Andromeda Tonks", "weight": 5}, {"source": "Severus Snape", "target": "Bellatrix Lestrange", "weight": 6}, {"source": "Severus Snape", "target": "Lily Potter", "weight": 12}, {"source": "Severus Snape", "target": "Blaise Zabini", "weight": 13}, {"source": "Severus Snape", "target": "Narcissa Malfoy", "weight": 15}, {"source": "Severus Snape", "target": "Lord Voldemort", "weight": 19}, {"source": "Severus Snape", "target": "Sirius Black", "weight": 19}, {"source": "Severus Snape", "target": "Remus Lupin", "weight": 32}, {"source": "Severus Snape", "target": "Ron Weasley", "weight": 39}, {"source": "Antonin Dolohov", "target": "Pansy Parkinson", "weight": 3}, {"source": "Antonin Dolohov", "target": "Rodolphus Lestrange", "weight": 4}, {"source": "Antonin Dolohov", "target": "Luna Lovegood", "weight": 8}, {"source": "Antonin Dolohov", "target": "Rabastan Lestrange", "weight": 10}, {"source": "Lord Voldemort", "target": "Lily Potter", "weight": 1}, {"source": "Lord Voldemort", "target": "Rodolphus Lestrange", "weight": 2}, {"source": "Lord Voldemort", "target": "Sirius Black", "weight": 3}, {"source": "Lord Voldemort", "target": "Pansy Parkinson", "weight": 3}, {"source": "Lord Voldemort", "target": "Blaise Zabini", "weight": 6}, {"source": "Lord Voldemort", "target": "Ron Weasley", "weight": 6}, {"source": "Lord Voldemort", "target": "Bellatrix Lestrange", "weight": 8}, {"source": "Lord Voldemort", "target": "Narcissa Malfoy", "weight": 8}, {"source": "Blaise Zabini", "target": "Sirius Black", "weight": 1}, {"source": "Blaise Zabini", "target": "Astoria Greengrass", "weight": 2}, {"source": "Blaise Zabini", "target": "Neville Longbottom", "weight": 3}, {"source": "Blaise Zabini", "target": "Luna Lovegood", "weight": 6}, {"source": "Blaise Zabini", "target": "Theodore Nott", "weight": 8}, {"source": "Blaise Zabini", "target": "Pansy Parkinson", "weight": 15}, {"source": "Blaise Zabini", "target": "Ron Weasley", "weight": 22}, {"source": "Theodore Nott", "target": "Astoria Greengrass", "weight": 2}, {"source": "Theodore Nott", "target": "Luna Lovegood", "weight": 2}, {"source": "Theodore Nott", "target": "Pansy Parkinson", "weight": 4}, {"source": "Bellatrix Lestrange", "target": "Narcissa Malfoy", "weight": 5}, {"source": "Bill Weasley", "target": "Molly Weasley", "weight": 1}, {"source": "Bill Weasley", "target": "Percy Weasley", "weight": 1}, {"source": "Bill Weasley", "target": "Scorpius Malfoy", "weight": 1}, {"source": "Bill Weasley", "target": "Arthur Weasley", "weight": 2}, {"source": "Bill Weasley", "target": "Remus Lupin", "weight": 2}, {"source": "Bill Weasley", "target": "Fred Weasley", "weight": 3}, {"source": "Bill Weasley", "target": "Charlie Weasley", "weight": 4}, {"source": "Bill Weasley", "target": "George Weasley", "weight": 5}, {"source": "Fred Weasley", "target": "Scorpius Malfoy", "weight": 1}, {"source": "Fred Weasley", "target": "Molly Weasley", "weight": 2}, {"source": "Fred Weasley", "target": "George Weasley", "weight": 22}, {"source": "Lily Potter", "target": "Andromeda Tonks", "weight": 1}, {"source": "Narcissa Malfoy", "target": "Andromeda Tonks", "weight": 1}, {"source": "Narcissa Malfoy", "target": "Kingsley Shacklebolt", "weight": 1}, {"source": "Narcissa Malfoy", "target": "Remus Lupin", "weight": 2}, {"source": "Narcissa Malfoy", "target": "Scorpius Malfoy", "weight": 2}, {"source": "Remus Lupin", "target": "Sirius Black", "weight": 24}, {"source": "Ron Weasley", "target": "Rodolphus Lestrange", "weight": 1}, {"source": "Ron Weasley", "target": "Neville Longbottom", "weight": 4}, {"source": "Ron Weasley", "target": "Sirius Black", "weight": 4}, {"source": "Ron Weasley", "target": "Luna Lovegood", "weight": 5}, {"source": "Ron Weasley", "target": "Pansy Parkinson", "weight": 7}, {"source": "Rodolphus Lestrange", "target": "Rabastan Lestrange", "weight": 6}, {"source": "George Weasley", "target": "Molly Weasley", "weight": 2}, {"source": "George Weasley", "target": "Charlie Weasley", "weight": 5}, {"source": "Molly Weasley", "target": "Percy Weasley", "weight": 1}, {"source": "Molly Weasley", "target": "Arthur Weasley", "weight": 4}, {"source": "Astoria Greengrass", "target": "Luna Lovegood", "weight": 2}, {"source": "Astoria Greengrass", "target": "Pansy Parkinson", "weight": 2}, {"source": "Charlie Weasley", "target": "Neville Longbottom", "weight": 1}, {"source": "Lavender Brown", "target": "Pansy Parkinson", "weight": 1}, {"source": "Luna Lovegood", "target": "Cho Chang", "weight": 1}, {"source": "Luna Lovegood", "target": "Pansy Parkinson", "weight": 3}, {"source": "Luna Lovegood", "target": "Neville Longbottom", "weight": 9}, {"source": "Neville Longbottom", "target": "Cho Chang", "weight": 1}], "stats": {"n_nodes": 36, "n_edges": 136, "density": 0.21587301587301588, "avg_clustering": 0.6102858923937355, "modularity": 0.11100708615269864, "n_communities": 5}}, {"id": "c3", "num": "3", "title": "Gemeinsam auftretende Figuren in Texten von Community 3", "nodes": [{"id": "Albus Dumbledore", "label": "Albus Dumbledore", "eigenvector": 0.05200948614394636, "betweenness": 0.1410030794096576, "degree": 9, "weighted_degree": 280}, {"id": "Dean Thomas", "label": "Dean Thomas", "eigenvector": 2.505971929619242e-07, "betweenness": 0.003676826318335752, "degree": 4, "weighted_degree": 50}, {"id": "Draco Malfoy", "label": "Draco Malfoy", "eigenvector": 8.092473339909989e-05, "betweenness": 0.10380276069681, "degree": 4, "weighted_degree": 188}, {"id": "Ginny Weasley", "label": "Ginny Weasley", "eigenvector": 0.002044938256072592, "betweenness": 0.015126773726193175, "degree": 5, "weighted_degree": 140}, {"id": "Hannah Abbott", "label": "Hannah Abbott", "eigenvector": 2.4132987917094422e-05, "betweenness": 0.23844944363812287, "degree": 7, "weighted_degree": 22}, {"id": "Harry Potter", "label": "Harry Potter", "eigenvector": 0.03742936637758655, "betweenness": 0.09877875386658361, "degree": 9, "weighted_degree": 651}, {"id": "Hermione Granger", "label": "Hermione Granger", "eigenvector": 0.02478738824163573, "betweenness": 0.2733275424547943, "degree": 8, "weighted_degree": 608}, {"id": "Minerva McGonagall", "label": "Minerva McGonagall", "eigenvector": 0.016693565541907898, "betweenness": 0.011848372938614548, "degree": 7, "weighted_degree": 182}, {"id": "Narcissa Malfoy", "label": "Narcissa Malfoy", "eigenvector": 0.0001688742757832833, "betweenness": 0.09049753037309599, "degree": 5, "weighted_degree": 119}, {"id": "Ron Weasley", "label": "Ron Weasley", "eigenvector": 0.01931461588534852, "betweenness": 0.12499246540429411, "degree": 7, "weighted_degree": 527}, {"id": "Rubeus Hagrid", "label": "Rubeus Hagrid", "eigenvector": 0.0011665484209338985, "betweenness": 0.0, "degree": 4, "weighted_degree": 23}, {"id": "Seamus Finnigan", "label": "Seamus Finnigan", "eigenvector": 9.330210455349195e-06, "betweenness": 0.1628700440021195, "degree": 5, "weighted_degree": 43}, {"id": "Severus Snape", "label": "Severus Snape", "eigenvector": 0.12400190896176794, "betweenness": 0.05320393805517173, "degree": 7, "weighted_degree": 350}, {"id": "Sirius Black", "label": "Sirius Black", "eigenvector": 0.48797844572482785, "betweenness": 0.032047098402323365, "degree": 7, "weighted_degree": 829}, {"id": "Thomas", "label": "Thomas", "eigenvector": 2.3699749035650465e-07, "betweenness": 0.003676826318335752, "degree": 4, "weighted_degree": 49}, {"id": "Abraxas Malfoy", "label": "Abraxas Malfoy", "eigenvector": 7.324354004502479e-05, "betweenness": 0.012887034349298497, "degree": 4, "weighted_degree": 23}, {"id": "Bellatrix Lestrange", "label": "Bellatrix Lestrange", "eigenvector": 0.00025092084360069827, "betweenness": 0.02972201217206767, "degree": 6, "weighted_degree": 127}, {"id": "Lord Voldemort", "label": "Lord Voldemort", "eigenvector": 0.005661798046982226, "betweenness": 0.12844560175303793, "degree": 7, "weighted_degree": 175}, {"id": "Lucius Malfoy", "label": "Lucius Malfoy", "eigenvector": 0.00024297262483080094, "betweenness": 0.0010780146601456258, "degree": 4, "weighted_degree": 126}, {"id": "Rabastan Lestrange", "label": "Rabastan Lestrange", "eigenvector": 6.971161751580821e-06, "betweenness": 0.04262820512820512, "degree": 4, "weighted_degree": 39}, {"id": "Rodolphus Lestrange", "label": "Rodolphus Lestrange", "eigenvector": 1.0010196722680906e-05, "betweenness": 0.000725689404934688, "degree": 3, "weighted_degree": 43}, {"id": "Adrian Pucey", "label": "Adrian Pucey", "eigenvector": 3.491586998589725e-10, "betweenness": 0.03773584905660377, "degree": 5, "weighted_degree": 18}, {"id": "Alicia Spinnet", "label": "Alicia Spinnet", "eigenvector": 1.5164039362361812e-09, "betweenness": 0.0, "degree": 4, "weighted_degree": 20}, {"id": "Angelina Johnson", "label": "Angelina Johnson", "eigenvector": 1.0989644042495152e-07, "betweenness": 0.1741654571843251, "degree": 5, "weighted_degree": 27}, {"id": "Blaise Zabini", "label": "Blaise Zabini", "eigenvector": 2.5832186922976303e-05, "betweenness": 0.0944427166125279, "degree": 6, "weighted_degree": 148}, {"id": "Daphne Greengrass", "label": "Daphne Greengrass", "eigenvector": 6.783295753751009e-07, "betweenness": 0.00919206579583938, "degree": 5, "weighted_degree": 45}, {"id": "Fred Weasley", "label": "Fred Weasley", "eigenvector": 0.00010890066852802733, "betweenness": 0.0, "degree": 4, "weighted_degree": 93}, {"id": "George Weasley", "label": "George Weasley", "eigenvector": 0.0004848461806885154, "betweenness": 0.015550092545738409, "degree": 6, "weighted_degree": 114}, {"id": "Katie Bell", "label": "Katie Bell", "eigenvector": 1.3496384891958365e-09, "betweenness": 0.0, "degree": 4, "weighted_degree": 18}, {"id": "Lee Jordan", "label": "Lee Jordan", "eigenvector": 8.457941586537287e-10, "betweenness": 0.0, "degree": 4, "weighted_degree": 12}, {"id": "Luna Lovegood", "label": "Luna Lovegood", "eigenvector": 0.0015351994091437385, "betweenness": 0.43473828924663477, "degree": 10, "weighted_degree": 164}, {"id": "Marcus Flint", "label": "Marcus Flint", "eigenvector": 4.238260051845425e-12, "betweenness": 0.0, "degree": 1, "weighted_degree": 8}, {"id": "Pansy Parkinson", "label": "Pansy Parkinson", "eigenvector": 9.89451022732752e-07, "betweenness": 0.015939825373787637, "degree": 6, "weighted_degree": 60}, {"id": "Theodore Nott", "label": "Theodore Nott", "eigenvector": 7.459186639615799e-07, "betweenness": 0.00919206579583938, "degree": 5, "weighted_degree": 45}, {"id": "James Potter", "label": "James Potter", "eigenvector": 0.5085269570095341, "betweenness": 0.032047098402323365, "degree": 7, "weighted_degree": 830}, {"id": "Kingsley Shacklebolt", "label": "Kingsley Shacklebolt", "eigenvector": 0.00018209021471098251, "betweenness": 0.004152922549148964, "degree": 3, "weighted_degree": 9}, {"id": "Lily Potter", "label": "Lily Potter", "eigenvector": 0.43935560496446946, "betweenness": 0.0, "degree": 5, "weighted_degree": 634}, {"id": "Neville Longbottom", "label": "Neville Longbottom", "eigenvector": 0.0005681002106354435, "betweenness": 0.013122436344497303, "degree": 4, "weighted_degree": 58}, {"id": "Nymphadora Tonks", "label": "Nymphadora Tonks", "eigenvector": 0.029716367317245387, "betweenness": 0.05075728796327703, "degree": 4, "weighted_degree": 58}, {"id": "Remus Lupin", "label": "Remus Lupin", "eigenvector": 0.4609032849573309, "betweenness": 0.04829265365955367, "degree": 8, "weighted_degree": 779}, {"id": "Arthur Weasley", "label": "Arthur Weasley", "eigenvector": 0.001500823308845427, "betweenness": 0.24446695251730255, "degree": 10, "weighted_degree": 49}, {"id": "Charlie Weasley", "label": "Charlie Weasley", "eigenvector": 1.2110940431523788e-05, "betweenness": 0.0, "degree": 3, "weighted_degree": 22}, {"id": "Cho Chang", "label": "Cho Chang", "eigenvector": 7.323458257934461e-08, "betweenness": 0.0, "degree": 1, "weighted_degree": 2}, {"id": "Peter Pettigrew", "label": "Peter Pettigrew", "eigenvector": 0.26539087973476017, "betweenness": 0.0, "degree": 5, "weighted_degree": 371}, {"id": "Regulus Black", "label": "Regulus Black", "eigenvector": 0.07553179588296564, "betweenness": 0.0, "degree": 5, "weighted_degree": 106}, {"id": "Astoria Greengrass", "label": "Astoria Greengrass", "eigenvector": 1.0479744435987425e-05, "betweenness": 0.026874121685442443, "degree": 5, "weighted_degree": 120}, {"id": "Barty Crouch Jr.", "label": "Barty Crouch Jr.", "eigenvector": 4.2309731621386126e-08, "betweenness": 0.0, "degree": 1, "weighted_degree": 4}, {"id": "Gregory Goyle", "label": "Gregory Goyle", "eigenvector": 6.41339241922046e-08, "betweenness": 0.001257861635220126, "degree": 2, "weighted_degree": 9}, {"id": "Ted Remus Lupin", "label": "Ted Remus Lupin", "eigenvector": 0.00027053414568412504, "betweenness": 0.0, "degree": 1, "weighted_degree": 6}, {"id": "Lavender Brown", "label": "Lavender Brown", "eigenvector": 1.8565372076697166e-10, "betweenness": 0.0, "degree": 1, "weighted_degree": 4}, {"id": "Molly Weasley", "label": "Molly Weasley", "eigenvector": 0.00037587764987373224, "betweenness": 0.01746404936877062, "degree": 5, "weighted_degree": 33}, {"id": "Millicent Bulstrode", "label": "Millicent Bulstrode", "eigenvector": 1.809346681965401e-08, "betweenness": 0.0146589259796807, "degree": 6, "weighted_degree": 21}, {"id": "Bill Weasley", "label": "Bill Weasley", "eigenvector": 7.627197405813531e-06, "betweenness": 0.01077041051855361, "degree": 4, "weighted_degree": 21}, {"id": "Parvati Patil", "label": "Parvati Patil", "eigenvector": 3.0589229993032655e-08, "betweenness": 0.04141267537493953, "degree": 5, "weighted_degree": 14}], "edges": [{"source": "Albus Dumbledore", "target": "Harry Potter", "weight": 45}, {"source": "Albus Dumbledore", "target": "Hermione Granger", "weight": 31}, {"source": "Albus Dumbledore", "target": "James Potter", "weight": 12}, {"source": "Albus Dumbledore", "target": "Lord Voldemort", "weight": 49}, {"source": "Albus Dumbledore", "target": "Minerva McGonagall", "weight": 49}, {"source": "Albus Dumbledore", "target": "Remus Lupin", "weight": 18}, {"source": "Albus Dumbledore", "target": "Severus Snape", "weight": 49}, {"source": "Albus Dumbledore", "target": "Sirius Black", "weight": 21}, {"source": "Albus Dumbledore", "target": "Rubeus Hagrid", "weight": 6}, {"source": "Dean Thomas", "target": "Millicent Bulstrode", "weight": 3}, {"source": "Dean Thomas", "target": "Parvati Patil", "weight": 3}, {"source": "Dean Thomas", "target": "Seamus Finnigan", "weight": 17}, {"source": "Dean Thomas", "target": "Thomas", "weight": 27}, {"source": "Draco Malfoy", "target": "Arthur Weasley", "weight": 3}, {"source": "Draco Malfoy", "target": "Astoria Greengrass", "weight": 80}, {"source": "Draco Malfoy", "target": "Blaise Zabini", "weight": 75}, {"source": "Draco Malfoy", "target": "Luna Lovegood", "weight": 30}, {"source": "Ginny Weasley", "target": "Fred Weasley", "weight": 15}, {"source": "Ginny Weasley", "target": "George Weasley", "weight": 14}, {"source": "Ginny Weasley", "target": "Luna Lovegood", "weight": 42}, {"source": "Ginny Weasley", "target": "Ron Weasley", "weight": 66}, {"source": "Ginny Weasley", "target": "Hannah Abbott", "weight": 3}, {"source": "Hannah Abbott", "target": "Angelina Johnson", "weight": 3}, {"source": "Hannah Abbott", "target": "Cho Chang", "weight": 2}, {"source": "Hannah Abbott", "target": "Luna Lovegood", "weight": 3}, {"source": "Hannah Abbott", "target": "Neville Longbottom", "weight": 7}, {"source": "Hannah Abbott", "target": "Fred Weasley", "weight": 2}, {"source": "Hannah Abbott", "target": "George Weasley", "weight": 2}, {"source": "Harry Potter", "target": "Arthur Weasley", "weight": 6}, {"source": "Harry Potter", "target": "Hermione Granger", "weight": 264}, {"source": "Harry Potter", "target": "Ron Weasley", "weight": 196}, {"source": "Harry Potter", "target": "Severus Snape", "weight": 91}, {"source": "Harry Potter", "target": "Minerva McGonagall", "weight": 31}, {"source": "Harry Potter", "target": "Molly Weasley", "weight": 6}, {"source": "Harry Potter", "target": "Nymphadora Tonks", "weight": 6}, {"source": "Harry Potter", "target": "Rubeus Hagrid", "weight": 6}, {"source": "Hermione Granger", "target": "Arthur Weasley", "weight": 3}, {"source": "Hermione Granger", "target": "Lord Voldemort", "weight": 39}, {"source": "Hermione Granger", "target": "Minerva McGonagall", "weight": 31}, {"source": "Hermione Granger", "target": "Ron Weasley", "weight": 210}, {"source": "Hermione Granger", "target": "Luna Lovegood", "weight": 24}, {"source": "Hermione Granger", "target": "Rubeus Hagrid", "weight": 6}, {"source": "Minerva McGonagall", "target": "Arthur Weasley", "weight": 2}, {"source": "Minerva McGonagall", "target": "Lord Voldemort", "weight": 12}, {"source": "Minerva McGonagall", "target": "Severus Snape", "weight": 52}, {"source": "Minerva McGonagall", "target": "Rubeus Hagrid", "weight": 5}, {"source": "Narcissa Malfoy", "target": "Arthur Weasley", "weight": 2}, {"source": "Narcissa Malfoy", "target": "Bellatrix Lestrange", "weight": 30}, {"source": "Narcissa Malfoy", "target": "Lord Voldemort", "weight": 15}, {"source": "Narcissa Malfoy", "target": "Lucius Malfoy", "weight": 65}, {"source": "Narcissa Malfoy", "target": "Rabastan Lestrange", "weight": 7}, {"source": "Ron Weasley", "target": "Arthur Weasley", "weight": 8}, {"source": "Ron Weasley", "target": "George Weasley", "weight": 14}, {"source": "Ron Weasley", "target": "Luna Lovegood", "weight": 16}, {"source": "Ron Weasley", "target": "Neville Longbottom", "weight": 17}, {"source": "Seamus Finnigan", "target": "Gregory Goyle", "weight": 4}, {"source": "Seamus Finnigan", "target": "Luna Lovegood", "weight": 4}, {"source": "Seamus Finnigan", "target": "Parvati Patil", "weight": 2}, {"source": "Seamus Finnigan", "target": "Thomas", "weight": 16}, {"source": "Severus Snape", "target": "Arthur Weasley", "weight": 4}, {"source": "Severus Snape", "target": "James Potter", "weight": 47}, {"source": "Severus Snape", "target": "Remus Lupin", "weight": 45}, {"source": "Severus Snape", "target": "Sirius Black", "weight": 62}, {"source": "Sirius Black", "target": "James Potter", "weight": 209}, {"source": "Sirius Black", "target": "Lily Potter", "weight": 153}, {"source": "Sirius Black", "target": "Peter Pettigrew", "weight": 100}, {"source": "Sirius Black", "target": "Regulus Black", "weight": 47}, {"source": "Sirius Black", "target": "Remus Lupin", "weight": 237}, {"source": "Thomas", "target": "Millicent Bulstrode", "weight": 3}, {"source": "Thomas", "target": "Parvati Patil", "weight": 3}, {"source": "Abraxas Malfoy", "target": "Bellatrix Lestrange", "weight": 4}, {"source": "Abraxas Malfoy", "target": "Lord Voldemort", "weight": 8}, {"source": "Abraxas Malfoy", "target": "Lucius Malfoy", "weight": 8}, {"source": "Abraxas Malfoy", "target": "Rodolphus Lestrange", "weight": 3}, {"source": "Bellatrix Lestrange", "target": "Lord Voldemort", "weight": 27}, {"source": "Bellatrix Lestrange", "target": "Lucius Malfoy", "weight": 28}, {"source": "Bellatrix Lestrange", "target": "Rabastan Lestrange", "weight": 13}, {"source": "Bellatrix Lestrange", "target": "Rodolphus Lestrange", "weight": 25}, {"source": "Lord Voldemort", "target": "Lucius Malfoy", "weight": 25}, {"source": "Rabastan Lestrange", "target": "Barty Crouch Jr.", "weight": 4}, {"source": "Rabastan Lestrange", "target": "Rodolphus Lestrange", "weight": 15}, {"source": "Adrian Pucey", "target": "Alicia Spinnet", "weight": 3}, {"source": "Adrian Pucey", "target": "Angelina Johnson", "weight": 2}, {"source": "Adrian Pucey", "target": "Katie Bell", "weight": 3}, {"source": "Adrian Pucey", "target": "Lee Jordan", "weight": 2}, {"source": "Adrian Pucey", "target": "Marcus Flint", "weight": 8}, {"source": "Alicia Spinnet", "target": "Angelina Johnson", "weight": 9}, {"source": "Alicia Spinnet", "target": "Katie Bell", "weight": 5}, {"source": "Alicia Spinnet", "target": "Lee Jordan", "weight": 3}, {"source": "Angelina Johnson", "target": "Katie Bell", "weight": 8}, {"source": "Angelina Johnson", "target": "Lee Jordan", "weight": 5}, {"source": "Blaise Zabini", "target": "Astoria Greengrass", "weight": 16}, {"source": "Blaise Zabini", "target": "Daphne Greengrass", "weight": 13}, {"source": "Blaise Zabini", "target": "Pansy Parkinson", "weight": 21}, {"source": "Blaise Zabini", "target": "Theodore Nott", "weight": 16}, {"source": "Blaise Zabini", "target": "Luna Lovegood", "weight": 7}, {"source": "Daphne Greengrass", "target": "Astoria Greengrass", "weight": 9}, {"source": "Daphne Greengrass", "target": "Millicent Bulstrode", "weight": 4}, {"source": "Daphne Greengrass", "target": "Pansy Parkinson", "weight": 11}, {"source": "Daphne Greengrass", "target": "Theodore Nott", "weight": 8}, {"source": "Fred Weasley", "target": "George Weasley", "weight": 72}, {"source": "Fred Weasley", "target": "Luna Lovegood", "weight": 4}, {"source": "George Weasley", "target": "Luna Lovegood", "weight": 6}, {"source": "George Weasley", "target": "Neville Longbottom", "weight": 6}, {"source": "Katie Bell", "target": "Lee Jordan", "weight": 2}, {"source": "Luna Lovegood", "target": "Neville Longbottom", "weight": 28}, {"source": "Pansy Parkinson", "target": "Astoria Greengrass", "weight": 9}, {"source": "Pansy Parkinson", "target": "Gregory Goyle", "weight": 5}, {"source": "Pansy Parkinson", "target": "Millicent Bulstrode", "weight": 4}, {"source": "Pansy Parkinson", "target": "Theodore Nott", "weight": 10}, {"source": "Theodore Nott", "target": "Astoria Greengrass", "weight": 6}, {"source": "Theodore Nott", "target": "Millicent Bulstrode", "weight": 5}, {"source": "James Potter", "target": "Lily Potter", "weight": 262}, {"source": "James Potter", "target": "Peter Pettigrew", "weight": 97}, {"source": "James Potter", "target": "Regulus Black", "weight": 20}, {"source": "James Potter", "target": "Remus Lupin", "weight": 183}, {"source": "Kingsley Shacklebolt", "target": "Bill Weasley", "weight": 2}, {"source": "Kingsley Shacklebolt", "target": "Molly Weasley", "weight": 3}, {"source": "Kingsley Shacklebolt", "target": "Nymphadora Tonks", "weight": 4}, {"source": "Lily Potter", "target": "Peter Pettigrew", "weight": 69}, {"source": "Lily Potter", "target": "Regulus Black", "weight": 15}, {"source": "Lily Potter", "target": "Remus Lupin", "weight": 135}, {"source": "Nymphadora Tonks", "target": "Remus Lupin", "weight": 42}, {"source": "Nymphadora Tonks", "target": "Ted Remus Lupin", "weight": 6}, {"source": "Remus Lupin", "target": "Peter Pettigrew", "weight": 100}, {"source": "Remus Lupin", "target": "Regulus Black", "weight": 19}, {"source": "Arthur Weasley", "target": "Bill Weasley", "weight": 2}, {"source": "Arthur Weasley", "target": "Charlie Weasley", "weight": 4}, {"source": "Arthur Weasley", "target": "Molly Weasley", "weight": 15}, {"source": "Charlie Weasley", "target": "Bill Weasley", "weight": 13}, {"source": "Charlie Weasley", "target": "Molly Weasley", "weight": 5}, {"source": "Peter Pettigrew", "target": "Regulus Black", "weight": 5}, {"source": "Lavender Brown", "target": "Parvati Patil", "weight": 4}, {"source": "Molly Weasley", "target": "Bill Weasley", "weight": 4}, {"source": "Millicent Bulstrode", "target": "Parvati Patil", "weight": 2}], "stats": {"n_nodes": 54, "n_edges": 135, "density": 0.09433962264150944, "avg_clustering": 0.5591710758377425, "modularity": 0.5808936776594484, "n_communities": 7}}];
 
 const colorScale = d3.scaleSequential()
-  .interpolator(d3.interpolateRgb('#d8c9a8', '#7a1f1f'));
+  .interpolator(d3.interpolateRgb('#FEE7B3', '#FDB636'));
 
 let currentIdx = 0;
 let mode = 'eigenvector';
@@ -377,14 +413,11 @@ function loadCommunity(idx) {
   svgEl.call(zoomBehavior.transform, d3.zoomIdentity);
 
   // Update header text
-  document.getElementById('num-display').textContent = c.num;
   document.getElementById('title-display').textContent = c.title;
 
   // Update stats
   document.getElementById('stat-nodes').textContent = c.stats.n_nodes;
   document.getElementById('stat-edges').textContent = c.stats.n_edges;
-  document.getElementById('stat-density').textContent = c.stats.density.toFixed(3);
-  document.getElementById('stat-modularity').textContent = c.stats.modularity.toFixed(3);
 
   // Tear down old SVG content
   svgEl.selectAll('*').remove();
@@ -474,6 +507,22 @@ function loadCommunity(idx) {
 
   applyMode();
   renderTable();
+  renderTopEdges();
+}
+
+function renderTopEdges() {
+  // Sort by weight desc and take top 10. Use original edge data (source/target are strings here,
+  // but after simulation init they become node objects — handle both).
+  const top = [...DATA.edges]
+    .sort((a, b) => b.weight - a.weight)
+    .slice(0, 10);
+
+  const tbody = d3.select('#tbody-edges');
+  tbody.selectAll('tr').remove();
+  const rows = tbody.selectAll('tr').data(top).join('tr');
+  rows.append('td').text(d => (d.source.label || d.source));
+  rows.append('td').text(d => (d.target.label || d.target));
+  rows.append('td').attr('class', 'num').text(d => d.weight);
 }
 
 function getRadius(d) {
